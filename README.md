@@ -29,8 +29,14 @@ Finalmente, cuando se quiere deactivar el entorno virutal habrá que ejecutar el
 deactivate
 ```
 \
-Las dependencias instaladas son:
+Las dependencias instaladas son: (Hugging Face)
 
  ```
 pip install transformers langchain langchain-community 
+```
+\
+Las dependencias instaladas son: (Azure OpenAI)
+
+ ```
+pip install langchain langchain-community openai azure-identity
 ```
