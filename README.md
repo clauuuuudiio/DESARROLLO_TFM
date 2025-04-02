@@ -40,3 +40,7 @@ Las dependencias instaladas son: (Azure OpenAI)
  ```
 pip install langchain langchain-community openai azure-identity
 ```
+
+## Creación del asistente conversacional
+
+Para la creación del chatbot se va a utilizar langchain y se realizará en el directorio `app.py`. Dentro de este archivo se definirá la función main encargada de realizar una petición al modelo y esperar una respuesta.
