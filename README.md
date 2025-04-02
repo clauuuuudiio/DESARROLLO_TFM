@@ -29,12 +29,6 @@ Finalmente, cuando se quiere deactivar el entorno virutal habrá que ejecutar el
 deactivate
 ```
 \
-Las dependencias instaladas son: (Hugging Face)
-
- ```
-pip install transformers langchain langchain-community 
-```
-\
 Las dependencias instaladas son: (Azure OpenAI)
 
  ```
@@ -43,4 +37,7 @@ pip install langchain langchain-community openai azure-identity
 
 ## Creación del asistente conversacional
 
-Para la creación del chatbot se va a utilizar langchain y se realizará en el directorio `app.py`. Dentro de este archivo se definirá la función main encargada de realizar una petición al modelo y esperar una respuesta.
+Para la creación del chatbot se va a utilizar langchain y se realizará en el directorio `app.py`. Dentro de este archivo se definirá la función main encargada de realizar una petición al modelo y esperar una respuesta. Hay dos modulos más dentro de la carpeta llm que se encargan de crear el Chatbot y de crear o recuperar la conversación. En el modulo `chatbot.py` se genera el LLM, el prompt template y el asistente conversacional, al cual se invocará para obtener la respuesta. Por otro lado, en el módulo `memory.py` se crea o se recupera la conversación si existe. 
+
+
+Se va a utilizar Azure OpenAI para crear el Chatbot. 
