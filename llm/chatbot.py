@@ -1,12 +1,17 @@
 from langchain_openai import AzureChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
+import os
 from llm.memory import get_memory
 
 def llm_generate():
     # Cargar las variables del archivo .env para crear el LLM
-    load_dotenv()
+    #load_dotenv()
+    # Cargar las variables mediante os
+    os.environ["OPENAI_API_VERSION"] = os.getenv("OPENAI_API_VERSION")
+    os.environ["AZURE_OPENAI_ENDPOINT"] = os.getenv("AZURE_OPENAI_ENDPOINT")
+    os.environ["AZURE_OPENAI_API_KEY"] = os.getenv("AZURE_OPENAI_API_KEY")
     
     llm = AzureChatOpenAI(
         deployment_name="prueba-gpt-35-turbo",

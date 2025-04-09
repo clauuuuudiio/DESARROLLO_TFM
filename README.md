@@ -32,7 +32,7 @@ deactivate
 Las dependencias instaladas son: (Azure OpenAI)
 
  ```
-pip install langchain langchain-community openai azure-identity
+pip install langchain langchain_openai
 ```
 
 ## Creación del asistente conversacional
@@ -41,3 +41,22 @@ Para la creación del chatbot se va a utilizar langchain y se realizará en el d
 
 
 Se va a utilizar Azure OpenAI para crear el Chatbot. 
+
+## Creación de la Azure Function
+
+Para crear la azure function hay que utilizar el siguiente comando:
+
+```
+func init . --worker-runtime python
+```
+\
+Después hay que crear la función con el comando `func new`.
+
+```
+func new
+```
+\
+Al crear la función hay que seleccionar varias ajustes.
+- Trigger: HTTP Trigger
+- Nombre: http_trigger_chatbot
+- Tipo: ANONYMOUS
