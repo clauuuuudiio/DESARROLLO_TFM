@@ -14,7 +14,7 @@ pip install virtualenv
 Después se creará el entorno virtual, llamado *env*.
 
 ```
-virtualenv -p python3 env
+virtualenv -p python env
 ```
 \
 Una vez creado el entorno hay que activarlo indicando la siguiente ruta.
@@ -36,7 +36,7 @@ deactivate
 Las dependencias instaladas son:
 
  ```
-pip install langchain langchain_openai
+pip install -r requirements.txt
 ```
 
 ### Creación del asistente conversacional
