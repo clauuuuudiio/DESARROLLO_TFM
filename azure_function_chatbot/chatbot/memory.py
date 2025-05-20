@@ -25,7 +25,7 @@ def get_messages(id, canal, conn):
             return list_messages
     except Exception as e:
         logging.info('Error al obtener los mensajes')
-        raise Exception(f"Error al guardar el cliente")
+        raise Exception(f"Error al obtener los mensajes")
         
 
 def save_client(id, canal, conn):
@@ -51,5 +51,5 @@ def save_memory(id, canal, question, response, conn):
             logging.info('Memoria actualizada correctamente')
     except Exception as e:
         conn.rollback()
-        logging.error('Error al guardar la memoria')
-        raise Exception(f"Error al guardar la memoria")
+        logging.error('Error al actualizar la memoria')
+        raise Exception(f"Error al actualizar la memoria")
