@@ -3,8 +3,8 @@ from function.tools import get_tools
 from function.model_llm import get_llm
 from langchain.schema import SystemMessage # type: ignore
 
-def get_agent(memory, conn):
-    tools = get_tools(conn)
+def get_agent(memory, conn, exp):
+    tools = get_tools(conn, exp)
     llm = get_llm()
 
     # Creacion del agente
@@ -14,7 +14,7 @@ def get_agent(memory, conn):
     agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
     memory=memory,    
     verbose=False,
-    agent_kwargs={"prefix": "Responde en el mismo idioma que el del mensaje."}
+    agent_kwargs={"prefix": "Responde de manera concreta y utilizando las herramientas (tools) proporcionadas.En el mismo idioma que el del mensaje."}
     )
     
     return agent

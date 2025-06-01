@@ -65,9 +65,9 @@ Frase a evaluar:
     
     return chain
 
-def get_qa_chain():
+def get_qa_chain(conn):
     llm = get_llm()
-    retriever = get_retriever()
+    retriever = get_retriever(conn)
 
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,

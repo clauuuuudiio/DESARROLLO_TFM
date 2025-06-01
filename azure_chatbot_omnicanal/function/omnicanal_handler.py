@@ -1,12 +1,18 @@
 from function.chains import get_recover_data_chain
 from function.user_handler import save_correo, save_telefono, get_alumno_by_expediente, get_alumno_by_valor
 import ast
+import logging
+from function.response_clear import clear_backticks
 
 def verify_data(id_mdm, valor, pregunta, conn):
     recover_data_chain = get_recover_data_chain()
     response_data = recover_data_chain.invoke({'input': pregunta}).content
+    response_data = clear_backticks(response_data)
+    logging.info('BIENNNNNNNNNNNN')
+    logging.info(response_data)
     try:
         data = ast.literal_eval(response_data)
+        logging.info('111111111111111111111111')
     except Exception as e:
         return None
     if data["correo"]:
@@ -18,7 +24,6 @@ def verify_data(id_mdm, valor, pregunta, conn):
     if data["expediente"]:
         # Buscar el expediente y unir con el id_mdm los valores del alumno
         alumno = get_alumno_by_expediente(data["expediente"], conn) # Buscar alumno por expediente
-        print("AAAAAAAAAAA", alumno)
         if not (alumno is None):
             if not (alumno[0] is None):
                 save_correo(id_mdm, alumno[0], conn) # Correo institucional

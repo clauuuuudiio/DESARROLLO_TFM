@@ -2,31 +2,48 @@ from langchain.tools import Tool # type: ignore
 from functools import partial
 from function.chains import get_qa_chain
 import re
+import logging
 
-def consultar_expediente(id: str, db_conn) -> str:
-    if(re.fullmatch(r'[0-9]+', id)):
+def consultar_expediente(id: str, db_conn, exp) -> str:
+    logging.info('AQUIiiiiiiiiiiiiiiiiiiii')
+    logging.info('1')
+    logging.info(id)
+    logging.info('2')
+    logging.info(exp)
+    if(re.fullmatch(r'[0-9]+', id) or exp):
+        if(exp):
+            expediente = exp
+        else:
+            expediente = id
         # Buscar en base de datos 
         with db_conn.cursor() as cursor:
             query = "select * from alumno where id = %s limit 1;"
-            params = (id)
+            params = (expediente)
             cursor.execute(query, params)
             row = cursor.fetchone()
             if row is None:
                 return f"No es ha obtenido información sobre el expediente indicado"
-            print("LA FILA DEVUELTA POR LA BBDD ES: ", row)
             nombre = row[1]
             apellidos = row[2]
             nota = row[3]
             curso = row[4]
-            return f"El expediente {id} corresponde con el alumno {nombre} {apellidos} el cual esta en el curso {curso}º y tiene una nota media de {nota}."
+            estudios = row[8]
+            return f"El expediente {expediente} corresponde con el alumno {nombre} {apellidos} el cual esta en el curso {curso}º de {estudios} y tiene una nota media de {nota}."
 
     else:  
-        return f"Debes indicarme un id para poder saber tu nota media."
+        return f"Debes indicarme un id para poder acceder a la información"
 
 def info_class(nombre_clase: str, db_conn) -> str:
-    clases = ['matemáticas']
-    nombre_min = nombre_clase.lower()
-    if nombre_min in clases:
+    logging.info('999999999999999999999999999')
+    nombre_min = nombre_clase.lower().strip("'")
+    logging.info(nombre_min)
+    logging.info('BBBBBBBBBBBBBBBBBB')
+    logging.info(re.fullmatch(r'[a-záéíóúñü ]+', nombre_min))
+    logging.info('CCCCCCCCCCCCCCCCCCC')
+    logging.info(repr(nombre_min))
+    
+    if(re.fullmatch(r'[a-záéíóúñü ]+', nombre_min)):
+        logging.info('777777777777777777777777777')
         with db_conn.cursor() as cursor:
             query = """
             SELECT *
@@ -54,27 +71,37 @@ def info_class(nombre_clase: str, db_conn) -> str:
 def pregunta_incorrecta():
     return "Lo siento, no puedo ayudarte con esa consulta."
 
-def get_tools(conn):
-    qa_chain = get_qa_chain()
+def get_tools(conn, exp):
+    qa_chain = get_qa_chain(conn)
     
-    consultar_expediente_conn = partial(consultar_expediente, db_conn=conn)
+    consultar_expediente_conn = partial(consultar_expediente, db_conn=conn, exp=exp)
     info_class_conn = partial(info_class, db_conn=conn)
     
     tools = [
         Tool( # Consulta el expediente de un alumno
             name="ConsultarExpediente",
             func=consultar_expediente_conn,
-            description="Usa esto para consultar el expediente o la nota media académico de un estudiante. Usa el identificador del estudiante como entrada."
+            description=(
+                "Usa esta herramienta para consultar información del expediente académico de un alumno. "
+                "Permite obtener datos como la nota media, el curso actual (1º, 2º, etc), y los estudios que está realizando "
+                "(por ejemplo, Informática, Lengua, etc). "
+                "Requiere como entrada el identificador único del estudiante (ID del expediente)."
+            )        
         ),
         Tool( # Consulta la información de una clase
             name="ConsultarClase",
             func=info_class_conn,
-            description="Usa esto para consultar la información relacionada con una clase (profesor, horario y/o materia). Usa el nombre de la asignatura como entrada."
+            description=(
+                "Usa esto para consultar información relacionada con una clase o asignatura, "
+                "incluyendo profesor, horario y materia. "
+                "Proporciona el nombre exacto de la asignatura como entrada, por ejemplo: "
+                "'Bases de Datos', 'Matemáticas Avanzadas', etc."
+            )        
         ),
-        Tool.from_function( # Responde una FAQs
+        Tool.from_function(
             func=lambda q: qa_chain({'query': q}),
             name="FAQsUniversidad",
-            description="Usa esto para responder preguntas frecuentes sobre dudas comunes en procesos administrativos, académicos o servicios de la universidad "
+            description="Usa esta herramienta cuando el usuario haga preguntas generales o frecuentes relacionadas con procesos administrativos o académicos de la universidad, como: inscripción, matrícula, horarios, servicios estudiantiles, requisitos, o fechas clave.",
         ),
         Tool( # Consulta el expediente de un alumno
             name="PreguntaIncorrecta",
